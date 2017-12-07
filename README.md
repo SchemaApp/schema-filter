@@ -7,7 +7,7 @@ JavaScript Filter tool to remove Schema markup in JSON-LD, Microdata, or RDFa fo
 Import the script on the page.
 
 ```html
-<script src="schemaFilter.js"><script>
+<script src="schemaFilter.js"></script>
 ```
 
 Run the script when the document is ready or after another event that injects Schema Markup into the page.
