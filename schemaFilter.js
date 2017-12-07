@@ -2,6 +2,24 @@ var SchemaFilter = {
 		
 	schemaClass : new Set(),
 
+	remove: function(type='micro') {
+		console.log(type);
+		switch(type) {
+			case 'micro':
+				this.removeMicroData();
+				console.log("Removing Micro");
+				break;
+			case 'json-ld':
+				this.removeJSONLD();
+				console.log("Removing JSON-LD");
+				break;
+			case 'rdfa':
+				this.removeMicroData();
+				break;
+		}
+		
+	},
+
 	removeMicroData: function() {
 	
 		var typeElements = document.querySelectorAll('[itemtype]');
@@ -33,26 +51,19 @@ var SchemaFilter = {
 			}
 		}
 	},
-	isJSONLD: function(value) {
-		var type = value.getAttribute('type');
-		return type === 'application/ld+json';
-	
-	},
 	removeJSONLD: function() {
-		var scriptElements = document.querySelectorAll('script');
+		var scriptElements = document.querySelectorAll('[type="application/ld+json"]');
 		var jsonLDElements = [];
 		
 		for (var i = 0; i < scriptElements.length; i++) {
-			if (this.isJSONLD(scriptElements[i])) {
-				var obj = JSON.parse(scriptElements[i].innerHTML);
-				
-				if (this.schemaClass === '') {
-					scriptElements[i].remove();
-					continue;
-				}
-				
-				jsonLDElements.push([scriptElements[i], obj]);
+			var obj = JSON.parse(scriptElements[i].innerHTML);
+			
+			if (this.schemaClass === '') {
+				scriptElements[i].remove();
+				continue;
 			}
+			
+			jsonLDElements.push([scriptElements[i], obj]);
 		}
 		
 		for (var i = 0; i < jsonLDElements.length; i++) {
