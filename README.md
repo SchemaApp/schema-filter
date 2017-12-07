@@ -6,17 +6,17 @@ JavaScript Filter tool to remove Schema markup in JSON-LD, Microdata, or RDFa fo
 
 Import the script on the page.
 
-```
+```html
 <script src="schemaFilter.js"><script>
 ```
 
 Run the script when the document is ready or after another event that injects Schema Markup into the page.
 
 ```javascript
-	document.addEventListener('DOMContentLoaded', function(event) {
-		SchemaFilter.schemaClass = new Set(['LocalBusiness']);
-		SchemaFilter.remove();
-	});
+document.addEventListener('DOMContentLoaded', function(event) {
+	SchemaFilter.schemaClass = new Set(['LocalBusiness']);
+	SchemaFilter.remove();
+});
 ```
  
 ### Modes of removal
@@ -35,7 +35,7 @@ If called multiple times without changing the filter the same filter will be use
 set multiple times. The filter is set by creating a ```Set``` and assigning it to the filter.
 
 ```javascript
-	SchemaFilter.schemaClass = new Set(['Event', 'Organization']); // This will remove all Event and Organization types
+SchemaFilter.schemaClass = new Set(['Event', 'Organization']); // This will remove all Event and Organization types
 
 ```
 
