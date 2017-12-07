@@ -1,39 +1,37 @@
-
-var microAttrs = ['itemscope', 'itemtype', 'itemid', 'itemprop', 'itemref', 'itemid'];
-
 var SchemaFilter = {
 		
-		schemaClass : '',
-
- 	performRemoval: function() {
-		// Normalize the user input
-		this.schemaClass = this.schemaClass.split('/').toUpperCase();
-	
-	},
+	schemaClass : new Set(),
 
 	removeMicroData: function() {
+	
 		var typeElements = document.querySelectorAll('[itemtype]');
+		if (typeElements.length === 0) {
+			typeElements = document.querySelector("html"); // Check the HTML tag to see if the type is there
+		}
 		var filteredElements = [];
-		
-		if (this.schemaClass != '') {
-			typeElements.forEach(function(ele) { 
+
+		if (this.schemaClass.length !== 0) {
+			for (var i = 0; i < typeElements.length; i++) {
+				var ele = typeElements[i];
 				var type = ele.getAttribute('itemtype');
-				var normalizedType = type.split('/')[-1].toUpperCase();
-				if (normalizedType === this.schemaClass) {
+				var normalizedType = type.split('/').pop();
+				if (this.schemaClass.has(normalizedType)) {
 					filterElements.push(ele);
 				}
-			});
+			}
 		} else {
 			filteredElements = typeElements;
 		}
 		
-		
-		filteredElements.forEach(function (ele) {
-			
-			for (var i = 0; i < microAttrs.length; i++) {
-				ele.removeAttribute(microAttrs[i]);
+		for (var i = 0; i < filteredElements.length; i++) {
+			var element = filteredElements[i];
+			var taggedChildren = element.querySelectorAll('itemprop');
+			for (var j = 0; j < taggedChildren.length; j++) {
+				var childElement = taggedChildren[i];
+				childElement.removeAttribute('itemprop');
+				childElement.removeAttribute('content');
 			}
-		});
+		}
 	},
 	isJSONLD: function(value) {
 		var type = value.getAttribute('type');
@@ -57,17 +55,41 @@ var SchemaFilter = {
 			}
 		}
 		
-		jsonLDElements.forEach(function(element) {
+		for (var i = 0; i < jsonLDElements.length; i++) {
+			var element = jsonLDElements[i];
 			var script = element[0];
-			var jObj = element[1]
-			if (jObj['@type'] === this.schemaClass) {
+			var jObj = element[1];
+			
+			if (this.schemaClass.has(jObj['@type'])) {
 				script.remove();
+			}
+		}
+		
+	},
+	removeRDFa: function() {
+		var markedTags = document.querySelectorAll('[typeof]');
+		var tagsToRemove = [];
+		if (this.schemaClass.length !== 0) {
+			for (var i = 0; i < markedTags.length; i++) {
+				var ele = markedTags[i];
+				if (this.schemaClass.has(ele.getAttribute('typeof'))) {
+					tagsToRemove.push(ele);
+				}
+			}
+		} else {
+			tagsToRemove = markedTags;
+		}
+		
+		tagsToRemove.forEach(function(ele) {
+			var elements = ele.querySelectorAll('[property]');
+		
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].removeAttribute('property');
+				elements[i].removeAttribute('typeof');
 			}
 		
 		});
-		
 	}
-	
 };
 
 
