@@ -7,14 +7,14 @@ JavaScript Filter tool to remove Schema markup in JSON-LD, Microdata, or RDFa fo
 To the use the script import it using a script tag. We recommend using the CDN version of the script where possible. 
 
 ```html
-	// Using the CDN Version (Recommended)
-	<script src="https://cdn.schemaapp.com/javascript/schemaFilter.min.js"></script>
+// Using the CDN Version (Recommended)
+<script src="https://cdn.schemaapp.com/javascript/schemaFilter.min.js"></script>
 
-	// Loading asyncronously 
-	<script async src="https://cdn.schemaapp.com/javascript/schemaFilter.min.js"></script>
+// Loading asyncronously 
+<script async src="https://cdn.schemaapp.com/javascript/schemaFilter.min.js"></script>
 
-	// Or load it locally
-	<script src="schemaFilter.js"></script>	
+// Or load it locally
+<script src="schemaFilter.js"></script>	
 
 ```
 
@@ -57,14 +57,14 @@ SchemaFilter.remove(null,'json-ld');
 Once the script is imported you may the run script in another block of javascript. The script should be run when the document is ready or after another event that injects Schema Markup into the page. If the markup is embedded in the source you may run when the document is loaded as shown below.
 
 ```javascript
-	SchemaFilter.remove(null, 'json-ld');
+SchemaFilter.remove(null, 'json-ld');
 ```
 
 If you want to alter the event in which the code is loaded you can specify the string event value into the ```onLoad``` property of the SchemaFilter. 
 
 ```javascript
-	SchemaFilter.onLoad = 'SomeEventHere'; // the default value
-	SchemaFilter.remove();
+SchemaFilter.onLoad = 'SomeEventHere'; // the default value
+SchemaFilter.remove();
 ```
  
 
