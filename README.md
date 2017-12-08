@@ -57,9 +57,14 @@ SchemaFilter.remove(null,'json-ld');
 Once the script is imported you may the run script in another block of javascript. The script should be run when the document is ready or after another event that injects Schema Markup into the page. If the markup is embedded in the source you may run when the document is loaded as shown below.
 
 ```javascript
-document.addEventListener('DOMContentLoaded', function(event) {
 	SchemaFilter.remove(null, 'json-ld');
-});
+```
+
+If you want to alter the event in which the code is loaded you can specify the string event value into the ```onLoad``` property of the SchemaFilter. 
+
+```javascript
+	SchemaFilter.onLoad = 'SomeEventHere'; // the default value
+	SchemaFilter.remove();
 ```
  
 

@@ -1,6 +1,7 @@
 var SchemaFilter = {
 		
 	schemaClass : new Set(),
+	onLoad: 'DOMContentLoaded',
 
 	remove: function(classes=[],type='micro') {
 		if (classes !== null) {		
@@ -14,17 +15,21 @@ var SchemaFilter = {
 			}
 		}
 
+		
 		switch(type) {
 			case 'micro':
-				this.removeMicroData();
+				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeMicroData()});
 				break;
 			case 'json-ld':
-				this.removeJSONLD();
+				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeJSONLD()});
 				break;
 			case 'rdfa':
-				this.removeMicroData();
+				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeMicroData()});
 				break;
 		}
+		
+
+		
 	},
 
 	removeMicroData: function() {
