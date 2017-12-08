@@ -2,22 +2,29 @@ var SchemaFilter = {
 		
 	schemaClass : new Set(),
 
-	remove: function(type='micro') {
-		console.log(type);
+	remove: function(classes=[],type='micro') {
+		if (classes !== null) {		
+			if (classes.constructor === Array) {
+				if (classes.length > 0) {
+					this.schemaClass = new Set(classes);
+				}
+			}
+			if (classes.constructor === Set) {
+				this.schemaClass = classes;
+			}
+		}
+
 		switch(type) {
 			case 'micro':
 				this.removeMicroData();
-				console.log("Removing Micro");
 				break;
 			case 'json-ld':
 				this.removeJSONLD();
-				console.log("Removing JSON-LD");
 				break;
 			case 'rdfa':
 				this.removeMicroData();
 				break;
 		}
-		
 	},
 
 	removeMicroData: function() {
