@@ -8,10 +8,10 @@ To the use the script import it using a script tag. We recommend using the CDN v
 
 ```html
 	// Using the CDN Version (Recommended)
-	<script src="https://s3.amazonaws.com/hunchwww/javascript/schemaFilter.min.js"><script>
+	<script src="https://s3.amazonaws.com/hunchwww/javascript/schemaFilter.min.js"></script>
 
 	// Loading asyncronously 
-	<script async src="https://s3.amazonaws.com/hunchwww/javascript/schemaFilter.min.js"><script>
+	<script async src="https://s3.amazonaws.com/hunchwww/javascript/schemaFilter.min.js"></script>
 
 	// Or load it locally
 	<script src="schemaFilter.js"></script>	
