@@ -6,7 +6,7 @@ var SchemaFilter = {
 	remove: function(classes=[],type='micro') {
 		if (classes !== null) {		
 			if (classes.constructor === Array) {
-				if (classes.length > 0) {
+				if (classes.length >= 0) {
 					this.schemaClass = new Set(classes);
 				}
 			}
@@ -14,9 +14,23 @@ var SchemaFilter = {
 				this.schemaClass = classes;
 			}
 		}
-
-		
+		// In the case this was added after the document was loaded.
+		if (document.readyState === "complete") {
+			switch(type) {
+				case 'microdata':
+				case 'micro':
+					SchemaFilter.removeMicroData();
+					break;
+				case 'json-ld':
+					SchemaFilter.removeJSONLD();
+					break;
+				case 'rdfa':
+					SchemaFilter.removeMicroData();
+				}
+			return;
+		}
 		switch(type) {
+			case 'microdata':
 			case 'micro':
 				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeMicroData()});
 				break;
@@ -27,9 +41,6 @@ var SchemaFilter = {
 				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeMicroData()});
 				break;
 		}
-		
-
-		
 	},
 
 	removeMicroData: function() {
@@ -46,7 +57,7 @@ var SchemaFilter = {
 				var type = ele.getAttribute('itemtype');
 				var normalizedType = type.split('/').pop();
 				if (this.schemaClass.has(normalizedType)) {
-					filterElements.push(ele);
+					filteredElements.push(ele);
 				}
 			}
 		} else {
@@ -55,9 +66,10 @@ var SchemaFilter = {
 		
 		for (var i = 0; i < filteredElements.length; i++) {
 			var element = filteredElements[i];
-			var taggedChildren = element.querySelectorAll('itemprop');
+			element.removeAttribute('itemtype');
+			var taggedChildren = element.querySelectorAll('[itemprop]');
 			for (var j = 0; j < taggedChildren.length; j++) {
-				var childElement = taggedChildren[i];
+				var childElement = taggedChildren[j];
 				childElement.removeAttribute('itemprop');
 				childElement.removeAttribute('content');
 			}
@@ -70,7 +82,7 @@ var SchemaFilter = {
 		for (var i = 0; i < scriptElements.length; i++) {
 			var obj = JSON.parse(scriptElements[i].innerHTML);
 			
-			if (this.schemaClass === '') {
+			if (this.schemaClass.length === 0) {
 				scriptElements[i].remove();
 				continue;
 			}
