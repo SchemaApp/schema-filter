@@ -3,7 +3,10 @@ var SchemaFilter = {
 	schemaClass : new Set(),
 	onLoad: 'DOMContentLoaded',
 
-	remove: function(classes=[],type='micro') {
+	remove: function(classes,type) {
+		if (type == null) {
+			type = 'micro';
+		}
 		if (classes !== null) {		
 			if (classes.constructor === Array) {
 				if (classes.length >= 0) {
@@ -27,7 +30,6 @@ var SchemaFilter = {
 				case 'rdfa':
 					SchemaFilter.removeMicroData();
 				}
-			return;
 		}
 		switch(type) {
 			case 'microdata':
@@ -127,6 +129,6 @@ var SchemaFilter = {
 	}
 };
 
-
+SchemaFilter.remove(["Product"]);
 
 
