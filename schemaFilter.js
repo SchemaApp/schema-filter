@@ -22,7 +22,7 @@ var SchemaFilter = {
 
 
 		// In the case this was added after the document was loaded.
-		if (document.readyState === "complete") {
+		
 			switch(type) {
 				case 'microdata':
 				case 'micro':
@@ -34,7 +34,7 @@ var SchemaFilter = {
 				case 'rdfa':
 					SchemaFilter.removeMicroData();
 				}
-		}
+		
 		switch(type) {
 			case 'microdata':
 			case 'micro':
