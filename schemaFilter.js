@@ -4,7 +4,7 @@ var SchemaFilter = {
 	onLoad: 'load',
 
 	remove: function(classes,type) {
-		if (classes == null || classes === undefined) {
+		if (classes === undefined) {
 			this.schemaClass = new Set();
 		} else {
 			if (classes.constructor === Array) {
@@ -16,7 +16,7 @@ var SchemaFilter = {
 				this.schemaClass = classes;
 			}
 		}
-		if (type == null) {
+		if (type === undefined) {
 			type = 'micro';
 		}
 
@@ -57,8 +57,8 @@ var SchemaFilter = {
 		}
 
       	var filteredElements = [];
-		console.log(this.schemaClass.length);
-		if (this.schemaClass.length !== undefined && this.schemaClass.length !== 0) {
+		console.log(this.schemaClass.size);
+		if (this.schemaClass.size !== 0) {
 			for (var i = 0; i < typeElements.length; i++) {
 				var ele = typeElements[i];
 				var type = ele.getAttribute('itemtype');
