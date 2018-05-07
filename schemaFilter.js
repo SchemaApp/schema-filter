@@ -1,13 +1,12 @@
 var SchemaFilter = {
 		
 	schemaClass : new Set(),
-	onLoad: 'DOMContentLoaded',
+	onLoad: 'load',
 
 	remove: function(classes,type) {
-		if (type == null) {
-			type = 'micro';
-		}
-		if (classes !== null) {		
+		if (classes == null || classes === undefined) {
+			this.schemaClass = new Set();
+		} else {
 			if (classes.constructor === Array) {
 				if (classes.length >= 0) {
 					this.schemaClass = new Set(classes);
@@ -17,6 +16,11 @@ var SchemaFilter = {
 				this.schemaClass = classes;
 			}
 		}
+		if (type == null) {
+			type = 'micro';
+		}
+
+
 		// In the case this was added after the document was loaded.
 		if (document.readyState === "complete") {
 			switch(type) {
@@ -51,21 +55,22 @@ var SchemaFilter = {
 		if (typeElements.length === 0) {
 			typeElements = document.querySelector("html"); // Check the HTML tag to see if the type is there
 		}
-		var filteredElements = [];
 
-		if (this.schemaClass.length !== 0) {
+      	var filteredElements = [];
+		console.log(this.schemaClass.length);
+		if (this.schemaClass.length !== undefined && this.schemaClass.length !== 0) {
 			for (var i = 0; i < typeElements.length; i++) {
 				var ele = typeElements[i];
 				var type = ele.getAttribute('itemtype');
 				var normalizedType = type.split('/').pop();
-				if (this.schemaClass.has(normalizedType)) {
+				if (SchemaFilter.schemaClass.has(normalizedType)) {
 					filteredElements.push(ele);
 				}
 			}
 		} else {
 			filteredElements = typeElements;
 		}
-		
+		      
 		for (var i = 0; i < filteredElements.length; i++) {
 			var element = filteredElements[i];
 			element.removeAttribute('itemtype');
@@ -128,7 +133,3 @@ var SchemaFilter = {
 		});
 	}
 };
-
-SchemaFilter.remove(["Product"]);
-
-
