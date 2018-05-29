@@ -89,7 +89,7 @@ var SchemaFilter = {
 		for (var i = 0; i < scriptElements.length; i++) {
 			var obj = JSON.parse(scriptElements[i].innerHTML);
 			
-			if (this.schemaClass.length === 0) {
+			if (this.schemaClass.size === 0) {
 				scriptElements[i].remove();
 				continue;
 			}
@@ -111,7 +111,7 @@ var SchemaFilter = {
 	removeRDFa: function() {
 		var markedTags = document.querySelectorAll('[typeof]');
 		var tagsToRemove = [];
-		if (this.schemaClass.length !== 0) {
+		if (this.schemaClass.size !== 0) {
 			for (var i = 0; i < markedTags.length; i++) {
 				var ele = markedTags[i];
 				if (this.schemaClass.has(ele.getAttribute('typeof'))) {
