@@ -78,6 +78,7 @@ var SchemaFilter = {
 			for (var j = 0; j < taggedChildren.length; j++) {
 				var childElement = taggedChildren[j];
 				childElement.removeAttribute('itemprop');
+				childElement.removeAttribute('itemscope');
 				childElement.removeAttribute('content');
 			}
 		}
