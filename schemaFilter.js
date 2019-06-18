@@ -56,8 +56,8 @@ var SchemaFilter = {
 			typeElements = document.querySelector("html"); // Check the HTML tag to see if the type is there
 		}
 
-      	var filteredElements = [];
-		console.log(this.schemaClass.size);
+		var filteredElements = [];
+		  
 		if (this.schemaClass.size !== 0) {
 			for (var i = 0; i < typeElements.length; i++) {
 				var ele = typeElements[i];
