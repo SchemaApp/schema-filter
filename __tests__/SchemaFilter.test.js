@@ -1,4 +1,4 @@
-import {SchemaFilter} from "./schemaFilter";
+import {SchemaFilter} from "../schemaFilter";
 
 
 
