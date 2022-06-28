@@ -22,7 +22,7 @@ const htmlNoIDInJSONLD =
 
 
 
-test('JSON-LD with \'@id\' tag', () =>{
+test('JSON-LD with \'@id\' tag', () => {
     document.body.innerHTML = htmlWitIDInJSONLD;
 
     SchemaFilter.removeJSONLD(true);
@@ -31,7 +31,7 @@ test('JSON-LD with \'@id\' tag', () =>{
     expect(document.body.innerHTML).toEqual(htmlWitIDInJSONLD);
 });
 
-test('JSON-LD without \'@id\' tag', () =>{
+test('JSON-LD without \'@id\' tag', () => {
     document.body.innerHTML = htmlNoIDInJSONLD;
 
     SchemaFilter.removeJSONLD(true);
@@ -42,7 +42,7 @@ test('JSON-LD without \'@id\' tag', () =>{
     );
 });
 
-test('remove any json-ld', () =>{
+test('remove any json-ld', () => {
     document.body.innerHTML = htmlNoIDInJSONLD;
 
     SchemaFilter.removeJSONLD(false);
