@@ -4,9 +4,8 @@ export var SchemaFilter = {
 	onLoad: 'load',
 
 	remove: function(classes,type,onlyRemoveJsonWithNoAtID) {
-		this.onlyRemoveJsonWithNoAtID = !!onlyRemoveJsonWithNoAtID;
 
-		if (classes === undefined) {
+		if (classes === undefined || classes === null) {
 			this.schemaClass = new Set();
 		} else {
 			if (classes.constructor === Array) {
@@ -18,7 +17,7 @@ export var SchemaFilter = {
 				this.schemaClass = classes;
 			}
 		}
-		if (type === undefined) {
+		if (type === undefined || type === null) {
 			type = 'micro';
 		}
 
@@ -31,7 +30,7 @@ export var SchemaFilter = {
 					SchemaFilter.removeMicroData();
 					break;
 				case 'json-ld':
-					SchemaFilter.removeJSONLD();
+					SchemaFilter.removeJSONLD(onlyRemoveJsonWithNoAtID);
 					break;
 				case 'rdfa':
 					SchemaFilter.removeMicroData();
@@ -43,7 +42,7 @@ export var SchemaFilter = {
 				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeMicroData()});
 				break;
 			case 'json-ld':
-				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeJSONLD()});
+				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeJSONLD(onlyRemoveJsonWithNoAtID)});
 				break;
 			case 'rdfa':
 				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeMicroData()});

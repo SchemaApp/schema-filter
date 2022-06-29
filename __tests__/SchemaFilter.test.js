@@ -29,6 +29,15 @@ test('JSON-LD with \'@id\' tag', () => {
 
     // Since there is an @id tag in the markup, the html file doesn't change
     expect(document.body.innerHTML).toEqual(htmlWitIDInJSONLD);
+
+
+    // similar functionality with the remove method is expected
+    document.body.innerHTML = htmlWitIDInJSONLD;
+
+    SchemaFilter.remove(null, 'json-ld', true);
+
+    // Since there is an @id tag in the markup, the html file doesn't change
+    expect(document.body.innerHTML).toEqual(htmlWitIDInJSONLD);
 });
 
 test('JSON-LD without \'@id\' tag', () => {
@@ -40,12 +49,32 @@ test('JSON-LD without \'@id\' tag', () => {
         '<script></script>' +
         '<script id="newTodoInput">SchemaFilter.remove(null, \'json-ld\');</script>'
     );
+
+    // similar functionality with the remove method is expected
+    document.body.innerHTML = htmlNoIDInJSONLD;
+
+    SchemaFilter.remove(null, 'json-ld', true);
+
+    expect(document.body.innerHTML).toEqual(
+        '<script></script>' +
+        '<script id="newTodoInput">SchemaFilter.remove(null, \'json-ld\');</script>'
+    );
 });
 
 test('remove any json-ld', () => {
     document.body.innerHTML = htmlNoIDInJSONLD;
 
     SchemaFilter.removeJSONLD(false);
+
+    expect(document.body.innerHTML).toEqual(
+        "<script></script>" +
+        "<script id=\"newTodoInput\">SchemaFilter.remove(null, 'json-ld');</script>"
+    );
+
+    // similar functionality with the remove method is expected
+    document.body.innerHTML = htmlNoIDInJSONLD;
+
+    SchemaFilter.remove(null, 'json-ld');
 
     expect(document.body.innerHTML).toEqual(
         "<script></script>" +
