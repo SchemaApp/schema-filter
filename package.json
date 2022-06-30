@@ -4,7 +4,7 @@
     "jest": "^28.1.1"
   },
   "scripts": {
-    "test": "jest --env=jsdom"
+    "test": "jest --env=jsdom --coverage"
   },
   "dependencies": {
     "jest-environment-jsdom": "^28.1.1"
