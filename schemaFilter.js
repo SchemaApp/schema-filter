@@ -1,10 +1,11 @@
-var SchemaFilter = {
-		
+export var SchemaFilter = {
+
 	schemaClass : new Set(),
 	onLoad: 'load',
 
-	remove: function(classes,type) {
-		if (classes === undefined) {
+	remove: function(classes,type,onlyRemoveJsonWithNoAtID) {
+
+		if (classes === undefined || classes === null) {
 			this.schemaClass = new Set();
 		} else {
 			if (classes.constructor === Array) {
@@ -16,32 +17,32 @@ var SchemaFilter = {
 				this.schemaClass = classes;
 			}
 		}
-		if (type === undefined) {
+		if (type === undefined || type === null) {
 			type = 'micro';
 		}
 
 
 		// In the case this was added after the document was loaded.
-		
+
 			switch(type) {
 				case 'microdata':
 				case 'micro':
 					SchemaFilter.removeMicroData();
 					break;
 				case 'json-ld':
-					SchemaFilter.removeJSONLD();
+					SchemaFilter.removeJSONLD(onlyRemoveJsonWithNoAtID);
 					break;
 				case 'rdfa':
 					SchemaFilter.removeMicroData();
 				}
-		
+
 		switch(type) {
 			case 'microdata':
 			case 'micro':
 				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeMicroData()});
 				break;
 			case 'json-ld':
-				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeJSONLD()});
+				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeJSONLD(onlyRemoveJsonWithNoAtID)});
 				break;
 			case 'rdfa':
 				window.addEventListener(this.onLoad, function(event) {SchemaFilter.removeMicroData()});
@@ -50,14 +51,14 @@ var SchemaFilter = {
 	},
 
 	removeMicroData: function() {
-	
+
 		var typeElements = document.querySelectorAll('[itemtype]');
 		if (typeElements.length === 0) {
 			typeElements = document.querySelector("html"); // Check the HTML tag to see if the type is there
 		}
 
 		var filteredElements = [];
-		  
+
 		if (this.schemaClass.size !== 0) {
 			for (var i = 0; i < typeElements.length; i++) {
 				var ele = typeElements[i];
@@ -70,7 +71,7 @@ var SchemaFilter = {
 		} else {
 			filteredElements = typeElements;
 		}
-		      
+
 		for (var i = 0; i < filteredElements.length; i++) {
 			var element = filteredElements[i];
 			element.removeAttribute('itemtype');
@@ -83,31 +84,40 @@ var SchemaFilter = {
 			}
 		}
 	},
-	removeJSONLD: function() {
+	removeJSONLD: function(onlyRemoveJsonWithNoAtID) {
+		this.onlyRemoveJsonWithNoAtID = !!onlyRemoveJsonWithNoAtID;
+
 		var scriptElements = document.querySelectorAll('[type="application/ld+json"]');
 		var jsonLDElements = [];
-		
+
 		for (var i = 0; i < scriptElements.length; i++) {
 			var obj = JSON.parse(scriptElements[i].innerHTML);
-			
-			if (this.schemaClass.size === 0) {
-				scriptElements[i].remove();
-				continue;
+
+			if (!this.onlyRemoveJsonWithNoAtID) {
+				if (this.schemaClass.size === 0) {
+					scriptElements[i].remove();
+					continue;
+				}
+			} else {
+				if (!obj['@id']) {
+					scriptElements[i].remove();
+					continue;
+				}
 			}
-			
+
 			jsonLDElements.push([scriptElements[i], obj]);
 		}
-		
+
 		for (var i = 0; i < jsonLDElements.length; i++) {
 			var element = jsonLDElements[i];
 			var script = element[0];
 			var jObj = element[1];
-			
+
 			if (this.schemaClass.has(jObj['@type'])) {
 				script.remove();
 			}
 		}
-		
+
 	},
 	removeRDFa: function() {
 		var markedTags = document.querySelectorAll('[typeof]');
@@ -122,15 +132,15 @@ var SchemaFilter = {
 		} else {
 			tagsToRemove = markedTags;
 		}
-		
+
 		tagsToRemove.forEach(function(ele) {
 			var elements = ele.querySelectorAll('[property]');
-		
+
 			for (var i = 0; i < elements.length; i++) {
 				elements[i].removeAttribute('property');
 				elements[i].removeAttribute('typeof');
 			}
-		
+
 		});
 	}
 };
