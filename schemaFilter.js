@@ -91,18 +91,33 @@ export var SchemaFilter = {
 		var jsonLDElements = [];
 
 		for (var i = 0; i < scriptElements.length; i++) {
-			var obj = JSON.parse(scriptElements[i].innerHTML);
-
-			if (!this.onlyRemoveJsonWithNoAtID) {
-				if (this.schemaClass.size === 0) {
-					scriptElements[i].remove();
-					continue;
+			try {
+				var obj = JSON.parse(scriptElements[i].innerHTML);
+	
+				if (!this.onlyRemoveJsonWithNoAtID) {
+					if (this.schemaClass.size === 0) {
+						scriptElements[i].remove();
+						continue;
+					}
+				} else {
+					var items = obj;
+					if (!Array.isArray(obj)) {
+						items = [obj];
+					}
+					var noId = true;
+					for (var j = 0; j < items.length; j++) {
+						if (items[i]['@id']) {
+							noId = false;
+							break;
+						}	
+					}
+					if (noId) {
+						scriptElements[i].remove();
+					}
+					
 				}
-			} else {
-				if (!obj['@id']) {
-					scriptElements[i].remove();
-					continue;
-				}
+			} catch(e) {
+				continue;
 			}
 
 			jsonLDElements.push([scriptElements[i], obj]);
