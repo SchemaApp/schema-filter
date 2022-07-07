@@ -63,11 +63,19 @@ test('JSON-LD without \'@id\' tag', () => {
     );
 });
 
-test('JSON-LD with an array that has @ids', () => {
+test('JSON-LD with an array that has @ids is not removed when searching for @ids', () => {
     
     document.body.innerHTML = htmlWithArrayOfItemsWithId;
     
     SchemaFilter.removeJSONLD(true);
+    
+    expect(document.body.innerHTML).toContain('<script type="application/ld+json" data-schema="11085-page-App">'); 
+});
+
+test('Remove JSON-LD with an array', () => {
+    document.body.innerHTML = htmlWithArrayOfItemsWithId;
+    
+    SchemaFilter.removeJSONLD();
     
     expect(document.body.innerHTML).not.toContain('<script type="application/ld+json" data-schema="11085-page-App">'); 
 });
