@@ -106,7 +106,7 @@ export var SchemaFilter = {
 					}
 					var noId = true;
 					for (var j = 0; j < items.length; j++) {
-						if (items[i]['@id']) {
+						if (items[j]['@id']) {
 							noId = false;
 							break;
 						}	
