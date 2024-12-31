@@ -6,41 +6,7 @@ on:
       - sync_labels
 
 jobs:
-  sync-labels:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Fetch Labels from Central Repository
-      run: |
-        curl -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
-          -o labels.yml \
-          https://raw.githubusercontent.com/SchemaApp/SchemaApp/master/.github/labels.yml
-
-    - name: Read Labels
-      id: read_labels
-      run: |
-        python3 <<EOF
-        import yaml
-        import json
-
-        with open('labels.yml', 'r') as file:
-            labels = yaml.safe_load(file)['labels']
-
-        with open('labels.json', 'w') as out_file:
-            json.dump(labels, out_file)
-        EOF
-
-    - name: Sync Labels
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        REPO=${{ github.repository }}
-
-        cat labels.json | jq -c '.[]' | while read label; do
-          NAME=$(echo $label | jq -r '.name')
-          COLOR=$(echo $label | jq -r '.color')
-          DESCRIPTION=$(echo $label | jq -r '.description')
-
-          gh label create "$NAME" --color "$COLOR" --description "$DESCRIPTION" -R $REPO || \
-          gh label edit "$NAME" --color "$COLOR" --description "$DESCRIPTION" -R $REPO
-        done
+  call-reusable-workflow:
+    uses: SchemaApp/SchemaApp/.github/workflows/sync-labels.yml@master
+    with:
+      labels_url: ${{ github.event.client_payload.labels_url }}
