@@ -14,7 +14,7 @@ jobs:
       run: |
         curl -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
           -o labels.yml \
-          https://raw.githubusercontent.com/SchemaApp/ActionDebugLife/main/.github/labels.yml
+          https://raw.githubusercontent.com/SchemaApp/SchemaApp/master/.github/labels.yml
 
     - name: Read Labels
       id: read_labels
