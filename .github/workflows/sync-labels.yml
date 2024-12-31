@@ -1,0 +1,14 @@
+name: Sync Labels from Central Repository
+
+on:
+  repository_dispatch:
+    types:
+      - sync_labels
+
+jobs:
+  call-reusable-workflow:
+    uses: SchemaApp/SchemaApp/.github/workflows/sync-labels.yml@master
+    with:
+      labels_url: https://raw.githubusercontent.com/SchemaApp/SchemaApp/master/.github/labels.yml
+    secrets:
+      PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
