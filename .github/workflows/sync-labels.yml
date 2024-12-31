@@ -1,72 +1,46 @@
-name: Sync Labels
+name: Sync Labels from Central Repository
 
 on:
-  push:
-    paths:
-      - '.github/labels.yml'
+  repository_dispatch:
+    types:
+      - sync_labels
 
 jobs:
   sync-labels:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Fetch Labels from Central Repository
+      run: |
+        curl -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
+          -o labels.yml \
+          https://raw.githubusercontent.com/SchemaApp/ActionDebugLife/main/.github/labels.yml
 
-      - name: Read Labels
-        id: read_labels
-        run: |
-          python3 <<EOF
-          import yaml
-          import json
-          
-          with open('.github/labels.yml', 'r') as file:
-              labels = yaml.safe_load(file)['labels']
-          
-          # Output labels as a JSON file
-          with open('labels.json', 'w') as out_file:
-              json.dump(labels, out_file)
-          EOF
+    - name: Read Labels
+      id: read_labels
+      run: |
+        python3 <<EOF
+        import yaml
+        import json
 
-      - name: Sync Labels in This Repository
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          REPO=${{ github.repository }}
-          
-          # Iterate over labels in the JSON file
-          cat labels.json | jq -c '.[]' | while read label; do
-            NAME=$(echo $label | jq -r '.name')
-            COLOR=$(echo $label | jq -r '.color')
-            DESCRIPTION=$(echo $label | jq -r '.description')
-          
-            # Create or update labels
-            gh label create "$NAME" --color "$COLOR" --description "$DESCRIPTION" -R $REPO || \
-            gh label edit "$NAME" --color "$COLOR" --description "$DESCRIPTION" -R $REPO
-          done
+        with open('labels.yml', 'r') as file:
+            labels = yaml.safe_load(file)['labels']
 
-  trigger-other-repos:
-    runs-on: ubuntu-latest
-    needs: sync-labels
+        with open('labels.json', 'w') as out_file:
+            json.dump(labels, out_file)
+        EOF
 
-    steps:
-      - name: Fetch Organization Repositories
-        id: fetch_repos
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        run: |
-          ORG="SchemaApp"
-          curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/orgs/$ORG/repos?per_page=100" | jq -r '.[].name' > repos.txt
+    - name: Sync Labels
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        REPO=${{ github.repository }}
 
-      - name: Trigger Sync in Other Repositories
-        run: |
-          ORG="SchemaApp"
-          while read REPO; do
-            echo "Triggering workflow for $ORG/$REPO"
-            curl -X POST \
-              -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
-              -H "Accept: application/vnd.github.v3+json" \
-              https://api.github.com/repos/$ORG/$REPO/dispatches \
-              -d '{"event_type":"sync_labels"}'
-          done < repos.txt
+        cat labels.json | jq -c '.[]' | while read label; do
+          NAME=$(echo $label | jq -r '.name')
+          COLOR=$(echo $label | jq -r '.color')
+          DESCRIPTION=$(echo $label | jq -r '.description')
+
+          gh label create "$NAME" --color "$COLOR" --description "$DESCRIPTION" -R $REPO || \
+          gh label edit "$NAME" --color "$COLOR" --description "$DESCRIPTION" -R $REPO
+        done
