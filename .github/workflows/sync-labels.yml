@@ -9,4 +9,6 @@ jobs:
   call-reusable-workflow:
     uses: SchemaApp/SchemaApp/.github/workflows/sync-labels.yml@master
     with:
-      labels_url: ${{ github.event.client_payload.labels_url }}
+      labels_url: https://raw.githubusercontent.com/SchemaApp/SchemaApp/master/.github/labels.yml
+    secrets:
+      PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
